@@ -1,5 +1,11 @@
+
+
+from django.contrib.auth.models import User
 from django.core.mail import EmailMessage, get_connection
 from django.conf import settings
+
+from users.models import UserMetrics
+from .schemas import UserMetricsCreate
 
 
 def send_activation_mail(user):
@@ -16,3 +22,16 @@ def send_activation_mail(user):
         message = f"You account with {user.email} has created, Please verify"  
         response = EmailMessage(subject, message, email_from, recipient_list, connection=connection).send()
         return response
+    
+
+def get_or_create_user_metrics_record(data_obj: UserMetricsCreate):
+    try:
+        user_metrics = UserMetrics.objects.get(user=data.user)
+        if not user_metrics:
+            data = data_obj.model_dump()
+            user = User.objects.get(id=data_obj.user)
+            data['user'] = user
+            user_metrics = UserMetrics.objects.create(**data)
+    except:
+        user_metrics=None
+    return user_metrics

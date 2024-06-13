@@ -4,8 +4,9 @@ from django.contrib.auth.models import User
 from ninja_extra import route, api_controller
 from ninja_jwt.controller import NinjaJWTDefaultController
 
-from users.schemas import UserCreate, UserPasswordReset, UserOut
-from users.helper import send_activation_mail
+from users.models import UserMetrics
+from users.schemas import UserCreate, UserPasswordReset, UserOut, UserMetricsCreate, UserMetricsOut
+from users.helper import send_activation_mail, get_or_create_user_metrics_record
 
 api = NinjaExtraAPI()
 
@@ -58,6 +59,22 @@ class AuthController:
         except Exception as e:
             return {"success": False, "message": f"Error --- {e}"}
 
-
+    @route.post('/add-user-matrix')
+    def create_user_matrix(self, request, data: UserMetricsCreate):
+        user_metrics = get_or_create_user_metrics_record(data)
+        if user_metrics:
+            return {'success': True, 'message': 'User metrics created successfully..!'}
+        else:
+            return {'success': False, 'message': 'Couldnt make user metrics..!'}
+        
+    @route.get('/user-metrics/{id}', response=UserMetricsOut)
+    def get_user_metrics(self, request, id: int):
+        user_metrics = UserMetrics.objects.get(id=id)
+        if user_metrics:
+            return user_metrics
+        else:
+            return {'success': False, 'message': 'user metrics not found..!'}
+        
+    
 api.register_controllers(NinjaJWTDefaultController)
 api.register_controllers(AuthController)

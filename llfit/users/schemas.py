@@ -2,6 +2,8 @@ from datetime import datetime
 
 from ninja import ModelSchema, Schema
 
+from users.models import UserMetrics
+
 
 class UserCreate(Schema):
     email: str
@@ -14,9 +16,26 @@ class UserPasswordReset(Schema):
     password: str
 
 class UserOut(Schema):
+    id: int
     username: str
     first_name: str
     last_name: str
     email: str
     is_staff: bool
     date_joined: datetime
+
+
+class UserMetricsCreate(Schema):
+    user: int
+    weight: float
+    height: float
+    age: int
+    gender: str
+    shift: str
+
+
+class UserMetricsOut(ModelSchema):
+    user : UserOut | None = None
+    class Meta:
+        model = UserMetrics
+        fields = ('id', 'weight', 'height', 'bmi', 'age', 'gender', 'shift')
