@@ -26,12 +26,13 @@ def send_activation_mail(user):
 
 def get_or_create_user_metrics_record(data_obj: UserMetricsCreate):
     try:
-        user_metrics = UserMetrics.objects.get(user=data.user)
+        user = User.objects.get(id=data_obj.user)
+        user_metrics = UserMetrics.objects.filter(user=user.id)
         if not user_metrics:
             data = data_obj.model_dump()
             user = User.objects.get(id=data_obj.user)
             data['user'] = user
             user_metrics = UserMetrics.objects.create(**data)
-    except:
+    except Exception as e:
         user_metrics=None
     return user_metrics

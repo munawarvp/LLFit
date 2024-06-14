@@ -13,9 +13,6 @@ api = NinjaExtraAPI()
 
 @api_controller('/user', tags=['User'])
 class AuthController:
-    @route.get('/', tags=['User'])
-    def get_users(self, request):
-        return {'data': [], 'message': 'Users fetched success'}
     
     @route.post('/register', tags=['User'])
     def register_new_user(self, request, data: UserCreate):
@@ -28,8 +25,8 @@ class AuthController:
                 is_active=False
             )
             if user:
-                response = send_activation_mail(user)
-                return {"success": True, "message": "User created successfully", "response": response}
+                # response = send_activation_mail(user)
+                return {"success": True, "message": "User created successfully"}
             else:
                 return {"success": False, "message": "User creation failed..!"}
         except Exception as e:
@@ -54,6 +51,19 @@ class AuthController:
             user = User.objects.get(id=user_id)
             if user:
                 return user
+            else:
+                return {'success': False, 'message': "User not found..!"}
+        except Exception as e:
+            return {"success": False, "message": f"Error --- {e}"}
+    
+    @route.put('/apporve-staff/{user_id}')
+    def approve_user_to_staff(self, request, user_id: int):
+        try:
+            user = User.objects.get(id=user_id)
+            if user:
+                user.is_staff=True
+                user.save()
+                return {'success': True, 'message': "User upgraded to staff..!"}
             else:
                 return {'success': False, 'message': "User not found..!"}
         except Exception as e:
