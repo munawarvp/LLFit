@@ -11,6 +11,15 @@ class UserMetrics(models.Model):
         (EVENING, 'Evening'),
         (NIGHT, 'Night'),
     ]
+    BEGINNER = 'beginner'
+    INTERMEDIATE = 'intermediate'
+    EXPERT = 'expert'
+
+    LEVEL_CHOICES = [
+        (BEGINNER, 'Beginner'),
+        (INTERMEDIATE, 'Intermediate'),
+        (EXPERT, 'Expert'),
+    ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     weight = models.FloatField(null=True, blank=True)
     height = models.FloatField(null=True, blank=True)
@@ -18,6 +27,7 @@ class UserMetrics(models.Model):
     age = models.IntegerField(null=True, blank=True)
     gender = models.CharField(max_length=10, blank=True)
     shift = models.CharField(max_length=10, choices=SHIFT_CHOICES, default=MORNING)
+    level = models.CharField(max_length=20,choices=LEVEL_CHOICES,default=BEGINNER)
 
     def __str__(self):
         return f"{self.user.username} details"

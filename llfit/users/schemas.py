@@ -25,14 +25,17 @@ class UserOut(Schema):
     date_joined: datetime
 
 
-class UserMetricsCreate(Schema):
-    user: int
+class UserMetricsSchema(Schema):
     weight: float
     height: float
     age: int
     gender: str
     shift: str
+class UserMetricsCreate(UserMetricsSchema):
+    user: int
 
+class UserMetricsUpdate(UserMetricsSchema):
+    level: str
 
 class UserMetricsOut(ModelSchema):
     user : UserOut | None = None

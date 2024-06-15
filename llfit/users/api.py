@@ -5,7 +5,7 @@ from ninja_extra import route, api_controller
 from ninja_jwt.controller import NinjaJWTDefaultController
 
 from users.models import UserMetrics
-from users.schemas import UserCreate, UserPasswordReset, UserOut, UserMetricsCreate, UserMetricsOut
+from users.schemas import UserCreate, UserPasswordReset, UserOut, UserMetricsCreate, UserMetricsOut, UserMetricsSchema
 from users.helper import send_activation_mail, get_or_create_user_metrics_record
 
 api = NinjaExtraAPI()
@@ -85,6 +85,14 @@ class AuthController:
         else:
             return {'success': False, 'message': 'user metrics not found..!'}
         
+    @route.put('update-metrics/{metrics_id}')
+    def update_user_metrics(self, request, metrics_id: int, data: UserMetricsSchema):
+        user_metrics = UserMetrics.objects.get(id=metrics_id)
+        if user_metrics:
+            UserMetrics.objects.update(**data.__dict__)
+            return {'success': True, 'message': 'record updated successfully..!'}
+        else:
+            return {'success': False, 'message': 'user metrics not found..!'}
     
 api.register_controllers(NinjaJWTDefaultController)
 api.register_controllers(AuthController)
