@@ -4,17 +4,18 @@ from django.contrib.auth.models import User
 from ninja_extra import route, api_controller
 from ninja_jwt.controller import NinjaJWTDefaultController
 
+from users.dependencies.auth import AuthBearer
 from users.models import UserMetrics
 from users.schemas import UserCreate, UserPasswordReset, UserOut, UserMetricsCreate, UserMetricsOut, UserMetricsSchema
 from users.helper import send_activation_mail, get_or_create_user_metrics_record, activate_user_token
 
-api = NinjaExtraAPI()
+api = NinjaExtraAPI(auth=AuthBearer())
 
 
 @api_controller('/user', tags=['User'])
 class AuthController:
     
-    @route.post('/register', tags=['User'])
+    @route.post('/register', auth=None, tags=['User'])
     def register_new_user(self, request, data: UserCreate):
         try:
             user = User.objects.create_user(
@@ -33,7 +34,7 @@ class AuthController:
             return {"success": False, "message": f"Error --- {e}"}
     
 
-    @route.get('/activate-user', tags=['User'])
+    @route.get('/activate-user', auth=None, tags=['User'])
     def activate_registered_user(self, uid: str, token: str):
         try:
             valid_user = activate_user_token(uid, token)
@@ -94,16 +95,16 @@ class AuthController:
             return {'success': False, 'message': 'Couldnt make user metrics..!'}
         
 
-    @route.get('/user-metrics/{id}', response=UserMetricsOut)
-    def get_user_metrics(self, request, id: int):
-        user_metrics = UserMetrics.objects.get(id=id)
-        if user_metrics:
+    @route.get('/user-metrics/{metrics_id}', response=UserMetricsOut)
+    def get_user_metrics(self, request, metrics_id: int):
+        try:
+            user_metrics = UserMetrics.objects.get(id=metrics_id)
             return user_metrics
-        else:
-            return {'success': False, 'message': 'user metrics not found..!'}
+        except Exception as e:
+            return {"success": False, "message": f"Error --- {e}"}
         
 
-    @route.put('update-metrics/{metrics_id}')
+    @route.put('/update-metrics/{metrics_id}')
     def update_user_metrics(self, request, metrics_id: int, data: UserMetricsSchema):
         user_metrics = UserMetrics.objects.get(id=metrics_id)
         if user_metrics:
@@ -111,6 +112,16 @@ class AuthController:
             return {'success': True, 'message': 'record updated successfully..!'}
         else:
             return {'success': False, 'message': 'user metrics not found..!'}
+        
+
+    @route.delete('/delete-user-metrics/{metrics_id}')
+    def delete_user_metrics_record(self, request, metrics_id: int):
+        try:
+            result = UserMetrics.objects.get(id=metrics_id)
+            result.delete()
+            return {'success': True, 'message': 'record deleted successfully..!'}
+        except Exception as e:
+            return {"success": False, "message": f"Error --- {e}"}
     
 
 api.register_controllers(NinjaJWTDefaultController)
