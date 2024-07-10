@@ -9,8 +9,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 
 from llfit.constants import activation_mail_content
-from users.models import UserMetrics
-from .schemas import UserMetricsCreate
+from users.models import UserMetrics, UserProfile
+from .schemas import UserMetricsCreate, UserProfileCreate
 
 
 def send_activation_mail(request, user):
@@ -42,15 +42,23 @@ def activate_user_token(uid: str, token: str):
         return False
 
 
-def get_or_create_user_metrics_record(data_obj: UserMetricsCreate):
+def create_user_metrics_record(data_obj: UserMetricsCreate):
     try:
+        data = data_obj.model_dump()
         user = User.objects.get(id=data_obj.user)
-        user_metrics = UserMetrics.objects.filter(user=user.id)
-        if not user_metrics:
-            data = data_obj.model_dump()
-            user = User.objects.get(id=data_obj.user)
-            data['user'] = user
-            user_metrics = UserMetrics.objects.create(**data)
+        data['user'] = user
+        user_metrics = UserMetrics.objects.create(**data)
     except Exception as e:
         user_metrics=None
     return user_metrics
+
+
+def create_user_profile_record(data_obj: UserProfileCreate):
+    try:
+        data = data_obj.model_dump()
+        user = User.objects.get(id=data_obj.user)
+        data['user'] = user
+        user_profile = UserProfile.objects.create(**data)
+    except Exception as e:
+        user_profile=None
+    return user_profile

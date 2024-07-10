@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from ninja import ModelSchema, Schema
 
@@ -28,17 +29,23 @@ class UserOut(Schema):
 class UserMetricsSchema(Schema):
     weight: float
     height: float
-    age: int
-    gender: str
-    shift: str
+
 class UserMetricsCreate(UserMetricsSchema):
     user: int
-
-class UserMetricsUpdate(UserMetricsSchema):
-    level: str
 
 class UserMetricsOut(ModelSchema):
     user : UserOut | None = None
     class Meta:
         model = UserMetrics
-        fields = ('id', 'weight', 'height', 'bmi', 'age', 'gender', 'shift')
+        fields = ('id', 'weight', 'height', 'bmi')
+
+
+class UserProfileSchema(Schema):
+    age: Optional[int] = None
+    gender: Optional[str] = None
+    shift: Optional[str] = None
+    level: Optional[str] = None
+    address: Optional[str] = None
+
+class UserProfileCreate(UserProfileSchema):
+    user: int

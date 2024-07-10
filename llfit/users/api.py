@@ -5,9 +5,18 @@ from ninja_extra import route, api_controller
 from ninja_jwt.controller import NinjaJWTDefaultController
 
 from users.dependencies.auth import AuthBearer
-from users.models import UserMetrics
-from users.schemas import UserCreate, UserPasswordReset, UserOut, UserMetricsCreate, UserMetricsOut, UserMetricsSchema
-from users.helper import send_activation_mail, get_or_create_user_metrics_record, activate_user_token
+from users.models import UserMetrics, UserProfile
+from users.schemas import (
+                            UserCreate,
+                            UserPasswordReset,
+                            UserOut,
+                            UserMetricsCreate,
+                            UserMetricsOut,
+                            UserMetricsSchema,
+                            UserProfileSchema,
+                            UserProfileCreate
+                        )
+from users.helper import send_activation_mail, create_user_metrics_record, activate_user_token, create_user_profile_record
 
 api = NinjaExtraAPI(auth=AuthBearer())
 
@@ -86,16 +95,36 @@ class AuthController:
             return {"success": False, "message": f"Error --- {e}"}
 
 
-    @route.post('/add-user-matrix')
-    def create_user_matrix(self, request, data: UserMetricsCreate):
-        user_metrics = get_or_create_user_metrics_record(data)
+    @route.post('/add-profile')
+    def create_user_profile(self, request, data: UserProfileCreate):
+        '''
+            Create UserProfile record for a user
+            args:
+                request,
+                data: UserMetricsCreate
+        '''
+        user_profile = create_user_profile_record(data)
+        if user_profile:
+            return {'success': True, 'message': 'User profile created successfully..!'}
+        else:
+            return {'success': False, 'message': 'Couldnt make user profile..!'}
+
+
+    @route.post('/add-metrics')
+    def create_user_metrics(self, request, data: UserMetricsCreate):
+        '''Create UsermMetrics record for a user
+        args:
+            request,
+            data: UserMetricsCreate
+        '''
+        user_metrics = create_user_metrics_record(data)
         if user_metrics:
             return {'success': True, 'message': 'User metrics created successfully..!'}
         else:
             return {'success': False, 'message': 'Couldnt make user metrics..!'}
         
 
-    @route.get('/user-metrics/{metrics_id}', response=UserMetricsOut)
+    @route.get('/user-metrics', response=UserMetricsOut)
     def get_user_metrics(self, request, metrics_id: int):
         try:
             user_metrics = UserMetrics.objects.get(id=metrics_id)
@@ -104,7 +133,20 @@ class AuthController:
             return {"success": False, "message": f"Error --- {e}"}
         
 
-    @route.put('/update-metrics/{metrics_id}')
+    @route.put('/update-profile')
+    def update_user_profile(self, request, profile_id: int, data: UserProfileSchema):
+        try:
+            user_profile = UserProfile.objects.get(id=profile_id)
+            if user_profile:
+                UserProfile.objects.update(**data.__dict__)
+                return {'success': True, 'message': 'record updated successfully..!'}
+            else:
+                return {'success': False, 'message': 'user profile not found..!'}
+        except Exception as e:
+            return {"success": False, "message": f"Error --- {e}"}
+
+
+    @route.put('/update-metrics')
     def update_user_metrics(self, request, metrics_id: int, data: UserMetricsSchema):
         user_metrics = UserMetrics.objects.get(id=metrics_id)
         if user_metrics:
@@ -114,7 +156,17 @@ class AuthController:
             return {'success': False, 'message': 'user metrics not found..!'}
         
 
-    @route.delete('/delete-user-metrics/{metrics_id}')
+    @route.delete('/delete-user')
+    def delete_user(self, request, user_id: int):
+        try:
+            user = User.objects.get(id=user_id)
+            user.delete()
+            return {'success': True, 'message': 'record deleted successfully..!'}
+        except Exception as e:
+            return {"success": False, "message": f"Error --- {e}"}
+
+
+    @route.delete('/delete-metrics')
     def delete_user_metrics_record(self, request, metrics_id: int):
         try:
             result = UserMetrics.objects.get(id=metrics_id)
