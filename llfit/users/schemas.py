@@ -3,7 +3,7 @@ from typing import Optional
 
 from ninja import ModelSchema, Schema
 
-from users.models import UserMetrics
+from users.models import UserMetrics, UserProfile
 
 
 class UserCreate(Schema):
@@ -46,6 +46,13 @@ class UserProfileSchema(Schema):
     shift: Optional[str] = None
     level: Optional[str] = None
     address: Optional[str] = None
+    phone_number: Optional[str] = None
 
 class UserProfileCreate(UserProfileSchema):
     user: int
+
+class UserProfileOut(ModelSchema):
+    user: UserOut | None = None
+    class Meta:
+        model = UserProfile
+        fields = ('id', 'age', 'gender', 'shift', 'level', 'address', 'phone_number')

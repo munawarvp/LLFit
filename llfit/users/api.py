@@ -14,9 +14,10 @@ from users.schemas import (
                             UserMetricsOut,
                             UserMetricsSchema,
                             UserProfileSchema,
-                            UserProfileCreate
+                            UserProfileCreate,
+                            UserProfileOut
                         )
-from users.helper import send_activation_mail, create_user_metrics_record, activate_user_token, create_user_profile_record
+from users.helper import send_activation_mail, create_user_metrics_record, activate_user_token, create_user_profile_record, calculate_latest_bmi
 
 api = NinjaExtraAPI(auth=AuthBearer())
 
@@ -43,18 +44,6 @@ class AuthController:
             return {"success": False, "message": f"Error --- {e}"}
     
 
-    @route.get('/activate-user', auth=None, tags=['User'])
-    def activate_registered_user(self, uid: str, token: str):
-        try:
-            valid_user = activate_user_token(uid, token)
-            if valid_user:
-                return {"success": True, "message": "User activated successfully..!"}
-            else:
-                return {"success": False, "message": "User activation failed..!"}
-        except Exception as e:
-            return {"success": False, "message": f"Error --- {e}"}
-    
-
     @route.post('/reset-password')
     def reset_user_password(self, request, data: UserPasswordReset):
         try:
@@ -69,7 +58,19 @@ class AuthController:
             return {"success": False, "message": f"Error --- {e}"}
         
 
-    @route.get('/get-user/{user_id}', response=UserOut)
+    @route.get('/activate-user', auth=None, tags=['User'])
+    def activate_registered_user(self, uid: str, token: str):
+        try:
+            valid_user = activate_user_token(uid, token)
+            if valid_user:
+                return {"success": True, "message": "User activated successfully..!"}
+            else:
+                return {"success": False, "message": "User activation failed..!"}
+        except Exception as e:
+            return {"success": False, "message": f"Error --- {e}"}
+        
+
+    @route.get('/get-user', response=UserOut)
     def get_single_user(self, request, user_id: int):
         try:
             user = User.objects.get(id=user_id)
@@ -79,9 +80,43 @@ class AuthController:
                 return {'success': False, 'message': "User not found..!"}
         except Exception as e:
             return {"success": False, "message": f"Error --- {e}"}
+        
+
+    @route.get('/get-profile', response=UserProfileOut)
+    def get_user_profile(self, request, profile_id: int):
+        '''
+        Get UserProfile record
+        args:
+            profile_id: int
+        '''
+        try:
+            user_metrics = UserProfile.objects.get(id=profile_id)
+            return user_metrics
+        except Exception as e:
+            return {"success": False, "message": f"Error --- {e}"}
+
+
+    @route.get('/user-metrics', response=UserMetricsOut)
+    def get_user_metrics(self, request, metrics_id: int):
+        try:
+            user_metrics = UserMetrics.objects.get(id=metrics_id)
+            return user_metrics
+        except Exception as e:
+            return {"success": False, "message": f"Error --- {e}"}
     
 
-    @route.put('/apporve-staff/{user_id}')
+    @route.get('/calculate-bmi', auth=None, response=UserMetricsOut)
+    def calculate_user_bmi(self, request, metrics_id: int):
+        '''Calculate BMI for user'''
+        user_metrics = UserMetrics.objects.get(id=metrics_id)
+        if user_metrics:
+            user_metrics = calculate_latest_bmi(metrics_id)
+            return user_metrics
+        else:
+            return {'success': False, 'message': "user metrics not found..!"}
+
+
+    @route.put('/apporve-staff')
     def approve_user_to_staff(self, request, user_id: int):
         try:
             user = User.objects.get(id=user_id)
@@ -122,15 +157,6 @@ class AuthController:
             return {'success': True, 'message': 'User metrics created successfully..!'}
         else:
             return {'success': False, 'message': 'Couldnt make user metrics..!'}
-        
-
-    @route.get('/user-metrics', response=UserMetricsOut)
-    def get_user_metrics(self, request, metrics_id: int):
-        try:
-            user_metrics = UserMetrics.objects.get(id=metrics_id)
-            return user_metrics
-        except Exception as e:
-            return {"success": False, "message": f"Error --- {e}"}
         
 
     @route.put('/update-profile')

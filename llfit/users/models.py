@@ -30,6 +30,7 @@ class UserProfile(models.Model):
         (EXPERT, 'Expert'),
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    phone_number = models.CharField(max_length=20)
     age = models.IntegerField(null=True, blank=True)
     gender = models.CharField(max_length=10, blank=True)
     shift = models.CharField(max_length=10, choices=SHIFT_CHOICES, default=MORNING)

@@ -62,3 +62,16 @@ def create_user_profile_record(data_obj: UserProfileCreate):
     except Exception as e:
         user_profile=None
     return user_profile
+
+
+def calculate_latest_bmi(metrics_id: int):
+    try:
+        user_metrics = UserMetrics.objects.get(id=metrics_id)
+        height = (user_metrics.height/100) ** 2
+        bmi = user_metrics.weight/height
+        user_metrics.bmi = round(bmi, 2)
+        user_metrics.save()
+    except Exception as e:
+        user_metrics = None
+    return user_metrics
+    
