@@ -83,23 +83,31 @@ class AuthController:
         
 
     @route.get('/get-profile', response=UserProfileOut)
-    def get_user_profile(self, request, profile_id: int):
+    def get_user_profile(self, request, profile_id:int=None):
         '''
         Get UserProfile record
         args:
             profile_id: int
         '''
         try:
-            user_metrics = UserProfile.objects.get(id=profile_id)
-            return user_metrics
+            user = request.auth
+            if profile_id:
+                user_profile = UserProfile.objects.get(id=profile_id)
+            else:
+                user_profile = UserProfile.objects.get(user=user.id)
+            return user_profile
         except Exception as e:
             return {"success": False, "message": f"Error --- {e}"}
 
 
     @route.get('/user-metrics', response=UserMetricsOut)
-    def get_user_metrics(self, request, metrics_id: int):
+    def get_user_metrics(self, request, metrics_id:int=None):
         try:
-            user_metrics = UserMetrics.objects.get(id=metrics_id)
+            user = request.auth
+            if metrics_id:
+                user_metrics = UserMetrics.objects.get(id=metrics_id)
+            else:
+                user_metrics = UserMetrics.objects.filter(user=user.id).latest('created_at')
             return user_metrics
         except Exception as e:
             return {"success": False, "message": f"Error --- {e}"}
@@ -114,20 +122,6 @@ class AuthController:
             return user_metrics
         else:
             return {'success': False, 'message': "user metrics not found..!"}
-
-
-    @route.put('/apporve-staff')
-    def approve_user_to_staff(self, request, user_id: int):
-        try:
-            user = User.objects.get(id=user_id)
-            if user:
-                user.is_staff=True
-                user.save()
-                return {'success': True, 'message': "User upgraded to staff..!"}
-            else:
-                return {'success': False, 'message': "User not found..!"}
-        except Exception as e:
-            return {"success": False, "message": f"Error --- {e}"}
 
 
     @route.post('/add-profile')
@@ -157,6 +151,20 @@ class AuthController:
             return {'success': True, 'message': 'User metrics created successfully..!'}
         else:
             return {'success': False, 'message': 'Couldnt make user metrics..!'}
+        
+        
+    @route.put('/apporve-staff')
+    def approve_user_to_staff(self, request, user_id: int):
+        try:
+            user = User.objects.get(id=user_id)
+            if user:
+                user.is_staff=True
+                user.save()
+                return {'success': True, 'message': "User upgraded to staff..!"}
+            else:
+                return {'success': False, 'message': "User not found..!"}
+        except Exception as e:
+            return {"success": False, "message": f"Error --- {e}"}
         
 
     @route.put('/update-profile')
