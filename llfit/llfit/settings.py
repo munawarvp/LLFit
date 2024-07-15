@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'llfit.wsgi.application'
 DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
-        default='postgresql://postgres:postgres@localhost:5432/LLFit',
+        default='postgresql://user:7aozy1zm9kWXnUpTkQxQHSXKMXnniwXJ@dpg-cqaam95ds78s739offq0-a/llfit',
         conn_max_age=600
     )
 }
