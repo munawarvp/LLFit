@@ -1,0 +1,92 @@
+import 'package:flutter/material.dart';
+import 'package:llfit_application/components/auth_button.dart';
+
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginScreen> {
+  bool passwordVisible = true;
+
+  void togglePasswordVisibility() {
+    setState(() {
+      passwordVisible = !passwordVisible; // Toggle the visibility
+    });
+  }
+
+  void login() {
+    print('Clicked');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Container(
+      color: Colors.purple,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Image.asset('assets/logo/LLFit.png', width: 100, height: 100),
+            const SizedBox(height: 20),
+            const Text('Welcome back...',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 33,
+                    fontFamily: 'Courier New')),
+            const SizedBox(height: 20),
+            TextField(
+              cursorColor: Colors.purple,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                  labelText: 'Username',
+                  labelStyle: const TextStyle(
+                      color: Colors.white, fontFamily: 'Courier New'),
+                  filled: true,
+                  fillColor: Colors.purple[300],
+                  border: UnderlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide:
+                          const BorderSide(width: 0, style: BorderStyle.none))),
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              obscureText: passwordVisible,
+              cursorColor: Colors.white,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                  labelText: 'Password',
+                  labelStyle: const TextStyle(
+                      color: Colors.white, fontFamily: 'Courier New'),
+                  filled: true,
+                  fillColor: Colors.purple[300],
+                  border: UnderlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide:
+                          const BorderSide(width: 0, style: BorderStyle.none)),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      passwordVisible ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      togglePasswordVisibility();
+                    },
+                  )),
+            ),
+            const SizedBox(height: 20),
+            AuthButton(
+                buttonText: 'Login',
+                buttonAction: () {
+                  login();
+                })
+          ],
+        ),
+      ),
+    ));
+  }
+}
