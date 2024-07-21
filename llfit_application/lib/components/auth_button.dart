@@ -17,7 +17,7 @@ class AuthButton extends StatelessWidget {
       width: 200,
       child: ElevatedButton(
         onPressed: () {
-          buttonAction;
+          buttonAction();
         },
         child: Text(buttonText, style: const TextStyle(color: Colors.purple, fontSize: 25, fontWeight: FontWeight.w900, fontFamily: 'Courier New'))
       )

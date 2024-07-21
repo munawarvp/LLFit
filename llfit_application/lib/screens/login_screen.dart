@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:llfit_application/components/auth_button.dart';
+import 'package:llfit_application/services/user.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,14 +11,13 @@ class LoginScreen extends StatefulWidget {
 class _LoginPageState extends State<LoginScreen> {
   bool passwordVisible = true;
 
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   void togglePasswordVisibility() {
     setState(() {
       passwordVisible = !passwordVisible; // Toggle the visibility
     });
-  }
-
-  void login() {
-    print('Clicked');
   }
 
   @override
@@ -40,6 +40,7 @@ class _LoginPageState extends State<LoginScreen> {
                     fontFamily: 'Courier New')),
             const SizedBox(height: 20),
             TextField(
+              controller: _usernameController,
               cursorColor: Colors.purple,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
@@ -55,6 +56,7 @@ class _LoginPageState extends State<LoginScreen> {
             ),
             const SizedBox(height: 20),
             TextField(
+              controller: _passwordController,
               obscureText: passwordVisible,
               cursorColor: Colors.white,
               style: const TextStyle(color: Colors.white),
@@ -81,9 +83,8 @@ class _LoginPageState extends State<LoginScreen> {
             const SizedBox(height: 20),
             AuthButton(
                 buttonText: 'Login',
-                buttonAction: () {
-                  login();
-                })
+                buttonAction: () {loginUser(context, {'username': _usernameController.text, 'password': _passwordController.text});}
+              )
           ],
         ),
       ),
