@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:llfit_application/screens/home_screen.dart';
 import 'package:llfit_application/screens/profile_screen.dart';
+import 'package:llfit_application/services/user.dart';
 
 
 class BottomBar extends StatelessWidget {
@@ -25,8 +26,8 @@ class BottomBar extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(Icons.search, color: Colors.white),
-              onPressed: () {
-                Navigator.of(context).pushNamed('/login-screen');
+              onPressed: () async {
+                await checkToken(context);
               },
             ),
             IconButton(
@@ -37,9 +38,7 @@ class BottomBar extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(Icons.person, color: Colors.white),
-              onPressed: () {
-                Navigator.of(context).pushNamed('/profile-screen');
-              },
+              onPressed: ()=>checkToken(context),
             ),
           ],
         ),

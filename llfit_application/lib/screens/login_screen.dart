@@ -14,7 +14,6 @@ class _LoginPageState extends State<LoginScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    checkToken();
   }
 
   bool passwordVisible = true;
