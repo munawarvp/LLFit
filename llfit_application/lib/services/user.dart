@@ -18,3 +18,9 @@ Future<Response?> loginUser(context, data) async{
       return null;
   }
 }
+
+Future<String?> checkToken() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? token = prefs.getString('token');
+  return token;
+}

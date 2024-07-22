@@ -9,6 +9,14 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginScreen> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkToken();
+  }
+
   bool passwordVisible = true;
 
   final _usernameController = TextEditingController();
