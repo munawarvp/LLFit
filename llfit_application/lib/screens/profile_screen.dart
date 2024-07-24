@@ -20,11 +20,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: Text('Welcome to the Profile Screen!'),
+        child: ElevatedButton(onPressed: ()=>logoutUser(context), child: const Text('Logout')),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: const BottomBar(),
     );
   }
 }
