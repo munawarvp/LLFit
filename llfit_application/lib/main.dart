@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:llfit_application/screens/home_screen.dart';
 import 'package:llfit_application/screens/login_screen.dart';
-import 'package:llfit_application/screens/profile_screen.dart';
 import 'package:llfit_application/screens/signup_screen.dart';
 
 void main() {
@@ -21,7 +20,6 @@ class MyApp extends StatelessWidget {
     home: const HomeScreen(),
     routes: {
       '/home-screen': (context) => const HomeScreen(),
-      '/profile-screen': (context) => const ProfileScreen(),
       '/login-screen': (context) => const LoginScreen(),
       '/signup-screen': (context) => const SignupScreen(),
     },

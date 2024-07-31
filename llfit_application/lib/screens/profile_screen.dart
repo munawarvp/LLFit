@@ -4,7 +4,12 @@ import 'package:llfit_application/services/user.dart';
 
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final String token;
+
+  const ProfileScreen({
+    super.key,
+    required this.token
+  });
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();

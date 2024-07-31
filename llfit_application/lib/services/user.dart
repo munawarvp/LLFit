@@ -1,5 +1,9 @@
+
+import 'dart:ffi';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:llfit_application/screens/home_screen.dart';
 import 'package:llfit_application/screens/login_screen.dart';
 import 'package:llfit_application/screens/profile_screen.dart';
@@ -14,7 +18,7 @@ void loginUser(context, data) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', response.data['access']);
     await prefs.setString('refresh', response.data['refresh']);
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>const ProfileScreen()));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>ProfileScreen(token: response.data['access'])));
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Login failed..!'),
@@ -31,7 +35,9 @@ Future<void> checkToken(context) async {
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const LoginScreen()));
   }
   else{
-    Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const ProfileScreen()));
+    final decodedToken = decodeJwt(token);
+    final profile = getUserProfile(decodedToken['userId'], token);
+    Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>ProfileScreen(token: token)));
   }
 }
 
@@ -68,4 +74,18 @@ void logoutUser(context) async {
       margin: EdgeInsets.all(15),
     ));
   }
+}
+
+decodeJwt(token) {
+  Map<String, dynamic> decodeToken = JwtDecoder.decode(token);
+  return decodeToken;
+}
+
+Future getUserProfile(userId, token) async {
+  try{
+    dio.options.headers["Authorization"] = "Bearer $token";
+    final response  =await dio.get('$baseUrl/api/user/get-profile');
+    print(response);
+    return response;
+  } catch(e){}
 }

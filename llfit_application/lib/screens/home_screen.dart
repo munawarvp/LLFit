@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:llfit_application/components/bottom_bar.dart';
+import 'package:llfit_application/services/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -13,9 +14,9 @@ class HomeScreen extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: Text('Home Screen'),
+        child: ElevatedButton(onPressed: (){logoutUser(context);}, child: Text('Logout')),
       ),
       bottomNavigationBar: BottomBar()
     );
