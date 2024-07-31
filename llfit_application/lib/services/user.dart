@@ -16,9 +16,11 @@ void loginUser(context, data) async {
   try {
     final response = await dio.post('$baseUrl/api/token/pair', data: data);
     final prefs = await SharedPreferences.getInstance();
+    final decodedToken = decodeJwt(response.data['access']);
+    final profile = await getUserProfile(decodedToken['userId'], response.data['access']);
     await prefs.setString('token', response.data['access']);
     await prefs.setString('refresh', response.data['refresh']);
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>ProfileScreen(token: response.data['access'])));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>ProfileScreen(token: response.data['access'], profile: profile,)));
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Login failed..!'),
@@ -36,8 +38,8 @@ Future<void> checkToken(context) async {
   }
   else{
     final decodedToken = decodeJwt(token);
-    final profile = getUserProfile(decodedToken['userId'], token);
-    Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>ProfileScreen(token: token)));
+    final profile = await getUserProfile(decodedToken['userId'], token);
+    Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>ProfileScreen(token: token, profile: profile)));
   }
 }
 
@@ -85,7 +87,6 @@ Future getUserProfile(userId, token) async {
   try{
     dio.options.headers["Authorization"] = "Bearer $token";
     final response  =await dio.get('$baseUrl/api/user/get-profile');
-    print(response);
     return response;
   } catch(e){}
 }
