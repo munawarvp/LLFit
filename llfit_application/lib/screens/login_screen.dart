@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:llfit_application/components/auth_button.dart';
 import 'package:llfit_application/services/user.dart';
+import 'package:llfit_application/utils/config.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -31,7 +32,7 @@ class _LoginPageState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-      color: Colors.purple,
+      color: primaryColor,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -48,14 +49,14 @@ class _LoginPageState extends State<LoginScreen> {
             const SizedBox(height: 20),
             TextField(
               controller: _usernameController,
-              cursorColor: Colors.purple,
+              cursorColor: Colors.white,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                   labelText: 'Username',
                   labelStyle: const TextStyle(
                       color: Colors.white, fontFamily: 'Courier New'),
                   filled: true,
-                  fillColor: Colors.purple[300],
+                  fillColor: baseColor,
                   border: UnderlineInputBorder(
                       borderRadius: BorderRadius.circular(25.0),
                       borderSide:
@@ -72,7 +73,7 @@ class _LoginPageState extends State<LoginScreen> {
                   labelStyle: const TextStyle(
                       color: Colors.white, fontFamily: 'Courier New'),
                   filled: true,
-                  fillColor: Colors.purple[300],
+                  fillColor: baseColor,
                   border: UnderlineInputBorder(
                       borderRadius: BorderRadius.circular(25.0),
                       borderSide:

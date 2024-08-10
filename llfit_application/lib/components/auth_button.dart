@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:llfit_application/utils/config.dart';
 
 class AuthButton extends StatelessWidget {
   final String buttonText;
@@ -19,7 +20,7 @@ class AuthButton extends StatelessWidget {
         onPressed: () {
           buttonAction();
         },
-        child: Text(buttonText, style: const TextStyle(color: Colors.purple, fontSize: 25, fontWeight: FontWeight.w900, fontFamily: 'Courier New'))
+        child: Text(buttonText, style: const TextStyle(color: baseColor, fontSize: 25, fontWeight: FontWeight.w900, fontFamily: 'Courier New'))
       )
     );
   }

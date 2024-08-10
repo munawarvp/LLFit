@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:llfit_application/screens/home_screen.dart';
 import 'package:llfit_application/screens/profile_screen.dart';
 import 'package:llfit_application/services/user.dart';
+import 'package:llfit_application/utils/config.dart';
 
 
 class BottomBar extends StatelessWidget {
@@ -10,7 +11,7 @@ class BottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
-      color: Colors.purple,
+      color: baseColor,
       shape: const CircularNotchedRectangle(),
       notchMargin: 6.0,
       child: SizedBox(
