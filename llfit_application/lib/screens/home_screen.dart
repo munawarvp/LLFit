@@ -15,8 +15,39 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: ElevatedButton(onPressed: (){logoutUser(context);}, child: Text('Logout')),
+      // body: Center(
+      //   child: ElevatedButton(onPressed: (){logoutUser(context);}, child: Text('Logout')),
+      // ),
+      body: SizedBox(
+        child: ListView(
+          children: [
+            Padding(padding: EdgeInsets.all(5),
+            child: Container(
+              height: 200,
+              color: Colors.yellow,  
+            )),
+            Padding(padding: EdgeInsets.all(5),
+            child: Container(
+              height: 200,
+              color: Colors.yellow,  
+            )),
+            Padding(padding: EdgeInsets.all(5),
+            child: Container(
+              height: 200,
+              color: Colors.yellow,  
+            )),
+            Padding(padding: EdgeInsets.all(5),
+            child: Container(
+              height: 200,
+              color: Colors.yellow,  
+            )),
+            Padding(padding: EdgeInsets.all(5),
+            child: Container(
+              height: 200,
+              color: Colors.yellow,  
+            )),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomBar()
     );
