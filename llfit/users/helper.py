@@ -8,7 +8,7 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
-from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from llfit.constants import activation_mail_content
 from users.models import UserMetrics, UserProfile
@@ -84,7 +84,7 @@ def health_checking():
     return response
 
 def schedule_job():
-    scheduler = BlockingScheduler()
+    scheduler = BackgroundScheduler()
     if not scheduler.get_jobs():
         scheduler.add_job(
             health_checking,
