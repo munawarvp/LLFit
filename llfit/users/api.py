@@ -17,7 +17,7 @@ from users.schemas import (
                             UserProfileCreate,
                             UserProfileOut
                         )
-from users.helper import send_activation_mail, create_user_metrics_record, activate_user_token, create_user_profile_record, calculate_latest_bmi
+from users.helper import send_activation_mail, create_user_metrics_record, activate_user_token, create_user_profile_record, calculate_latest_bmi, schedule_job
 
 api = NinjaExtraAPI(auth=AuthBearer())
 
@@ -209,6 +209,16 @@ class AuthController:
         except Exception as e:
             return {"success": False, "message": f"Error --- {e}"}
     
+
+    @route.get('/health', auth=None)
+    def check_application_health(self, request):
+        return {'success': True, 'message': 'health check..!'}
+    
+
+    @route.get('/keep-server-alive', auth=None)
+    def keep_server_alive_using_job(self, request):
+        resposne = schedule_job()
+        return resposne
 
 api.register_controllers(NinjaJWTDefaultController)
 api.register_controllers(AuthController)
