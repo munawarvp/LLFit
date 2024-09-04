@@ -3,6 +3,7 @@ import 'package:llfit_application/components/bottom_bar.dart';
 import 'package:llfit_application/components/bottom_sheet.dart';
 import 'package:llfit_application/components/info.dart';
 import 'package:llfit_application/components/report.dart';
+import 'package:llfit_application/services/user.dart';
 import 'package:llfit_application/utils/config.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -36,7 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: AppBar(
               centerTitle: true,
               title: const Text("Profile"),
-              actions: [IconButton(onPressed: (){}, icon: const Icon(Icons.logout))],
+              actions: [IconButton(onPressed: (){logoutUser(context);}, icon: const Icon(Icons.logout))],
             )),
         body: SizedBox(
               width: double.infinity,
@@ -60,14 +61,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           fontSize: 27,
                           fontFamily: 'Courier New')),
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: NeumorphicToggle(
                        style: const NeumorphicToggleStyle(
-                        //backgroundColor: Colors.red,
+                        backgroundColor: Colors.blue,
+                        depth: 10
                         ),
                       selectedIndex: _selectedIndex,
                       thumb: Neumorphic(
                         style: NeumorphicStyle(
+                          color: Colors.blue[100],
                           boxShape: NeumorphicBoxShape.roundRect(
                               const BorderRadius.all(Radius.circular(12))),
                         ),
@@ -78,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: Text(
                             "Reports",
                             style: TextStyle(
-                                fontWeight: FontWeight.w500, color: Colors.black),
+                                fontWeight: FontWeight.w500, color: Colors.white),
                           )),
                           foreground: const Center(
                               child: Text(
@@ -92,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: Text(
                             "Info",
                             style: TextStyle(
-                                fontWeight: FontWeight.w500, color: Colors.black),
+                                fontWeight: FontWeight.w500, color: Colors.white),
                           )),
                           foreground: const Center(
                               child: Text(
@@ -109,17 +112,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                     ),
                   ),
-                  _selectedIndex == 0 ? Report(metrics: widget.metrics) : InfoPage(profile: widget.profile, user: widget.profile),
+                  _selectedIndex == 0 ? Report(metrics: widget.metrics) : InfoPage(profile: widget.profile),
                 ],
               ),
             ),
         bottomNavigationBar: const BottomBar(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: SizedBox(
-            height: 75,
-            width: 100,
+            height: 50,
+            width: 70,
             child: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: buttonOne),
+                style: ElevatedButton.styleFrom(backgroundColor: baseColor),
                 onPressed: () {
                   showModalBottomSheet<void>(
                     showDragHandle: true,
@@ -130,6 +133,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     },
                   );
                 },
-                child: const Icon(Icons.add))));
+                child: const Icon(Icons.add, size: 25, color: Colors.white))));
   }
 }

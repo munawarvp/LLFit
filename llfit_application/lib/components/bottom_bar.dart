@@ -32,9 +32,9 @@ class BottomBar extends StatelessWidget {
               },
             ),
             IconButton(
-              icon: const Icon(Icons.access_alarm, color: Colors.white),
+              icon: const Icon(Icons.menu_book_rounded, color: Colors.white),
               onPressed: () {
-                Navigator.of(context).pushNamed('/signup-screen');
+                // Navigator.of(context).pushNamed('/signup-screen');
               },
             ),
             IconButton(

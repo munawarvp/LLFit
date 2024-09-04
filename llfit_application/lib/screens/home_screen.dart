@@ -44,7 +44,8 @@ class HomeScreen extends StatelessWidget {
             Padding(padding: EdgeInsets.all(5),
             child: Container(
               height: 200,
-              color: Colors.yellow,  
+              color: Colors.yellow,
+              child: Center(child: ElevatedButton(onPressed: (){logoutUser(context);}, child: Text('Log Out'))),
             )),
           ],
         ),

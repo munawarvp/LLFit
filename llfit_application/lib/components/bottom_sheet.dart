@@ -31,7 +31,7 @@ class _CustomeBottomSheetState extends State<CustomeBottomSheet> {
                           color: headingBase,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Courier New')),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 15),
                   TextField(
                     controller: _weightFieldController,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -47,7 +47,7 @@ class _CustomeBottomSheetState extends State<CustomeBottomSheet> {
                             borderSide: const BorderSide(
                                 width: 0, style: BorderStyle.none))),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
                   TextField(
                     controller: _heightFieldController,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -63,7 +63,7 @@ class _CustomeBottomSheetState extends State<CustomeBottomSheet> {
                             borderSide: const BorderSide(
                                 width: 0, style: BorderStyle.none))),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   SizedBox(
                     height: 60,
                     width: 150,

@@ -7,6 +7,7 @@ const Color primaryColor = Color.fromARGB(255, 158, 43, 207);
 
 const Color cardOne = Color.fromARGB(255, 212, 0, 124);
 const Color cardTwo = Color.fromARGB(255, 253,131,17);
+const Color cardThree = Color.fromARGB(255, 7, 174, 74);
 
 const Color buttonOne = Color.fromARGB(255, 243,204,255);
 const Color buttonTwo = Color.fromARGB(255, 76,81,109);

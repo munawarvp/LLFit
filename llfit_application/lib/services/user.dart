@@ -131,9 +131,7 @@ Future<dynamic> getUserProfile(userId, token, context) async {
     dio.options.headers["Authorization"] = "Bearer $token";
     Response response = await dio.get('$baseUrl/api/user/get-profile');
     return response.data;
-  } catch(e){
-    print(e);
-  }
+  } catch(e){}
 }
 
 Future<dynamic> getUserMetrics(String token, {int? userId}) async {
@@ -141,9 +139,7 @@ Future<dynamic> getUserMetrics(String token, {int? userId}) async {
     dio.options.headers["Authorization"] = "Bearer $token";
     Response response = await dio.get('$baseUrl/api/user/user-metrics');
     return response.data;
-  } catch(e){
-    print(e);
-  }
+  } catch(e){}
 }
 
 Future<dynamic> createMetrics(Map data, context) async {
@@ -172,9 +168,6 @@ Future calculateMetrics(int metricsId) async {
     final token = getToken();
     dio.options.headers["Authorization"] = "Bearer $token";
     final response = await dio.get('$baseUrl/api/user/calculate-bmi', queryParameters: {'metrics_id': metricsId});
-    print(response.data);
     return response.data;
-  } catch (e) {
-    print(e);
-  }
+  } catch (e) {}
 }

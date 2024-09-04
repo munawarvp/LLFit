@@ -43,6 +43,8 @@ dependencies:
     git:
       url: https://github.com/den0206/Flutter-Neumorphic.git
       ref: feature/remoce_accentcolor
+  provider: ^6.1.2
+  syncfusion_flutter_charts: ^26.2.11
 
 dev_dependencies:
   flutter_test:
@@ -60,7 +62,8 @@ dev_dependencies:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/logo/LLFit.png"
+  image_path: "assets/logo/llfit_logo.png"
+  adaptive_icon_background: "assets/logo/llfit_logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -76,6 +79,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/logo/LLFit.png
+    - assets/logo/llfit_logo.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
