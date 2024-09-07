@@ -51,6 +51,10 @@ class UserProfileSchema(Schema):
 class UserProfileCreate(UserProfileSchema):
     user: int
 
+class MetricsReport(Schema):
+    success: bool
+    data: list
+    
 class UserProfileOut(ModelSchema):
     user: UserOut | None = None
     class Meta:

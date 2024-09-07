@@ -95,3 +95,8 @@ def schedule_job():
         return {'success': True, 'message': 'Job scheduled'}
     else:
         return {'success': False, 'message': 'Job already running'}
+
+
+def metrics_report(user, filter_model):
+    metrics = UserMetrics.objects.filter(user=user.id).values('weight', 'created_at')
+    return metrics

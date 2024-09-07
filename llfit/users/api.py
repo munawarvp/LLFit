@@ -15,9 +15,10 @@ from users.schemas import (
                             UserMetricsSchema,
                             UserProfileSchema,
                             UserProfileCreate,
-                            UserProfileOut
+                            UserProfileOut,
+                            MetricsReport
                         )
-from users.helper import send_activation_mail, create_user_metrics_record, activate_user_token, create_user_profile_record, calculate_latest_bmi, schedule_job
+from users.helper import send_activation_mail, create_user_metrics_record, activate_user_token, create_user_profile_record, calculate_latest_bmi, schedule_job, metrics_report
 
 api = NinjaExtraAPI(auth=AuthBearer())
 
@@ -123,6 +124,12 @@ class AuthController:
         else:
             return {'success': False, 'message': "user metrics not found..!"}
 
+
+    @route.get('metrics-report', response=MetricsReport)
+    def fetch_metrics_reports(self, request, filter_model=None):
+        user = request.auth
+        data = metrics_report(user, filter_model)
+        return MetricsReport(success=True, data=data).dict()
 
     @route.post('/add-profile')
     def create_user_profile(self, request, data: UserProfileCreate):
