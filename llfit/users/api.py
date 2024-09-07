@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from ninja_extra import NinjaExtraAPI
 
 from django.contrib.auth.models import User
@@ -126,7 +128,7 @@ class AuthController:
 
 
     @route.get('metrics-report', response=MetricsReport)
-    def fetch_metrics_reports(self, request, filter_model=None):
+    def fetch_metrics_reports(self, request, filter_model : datetime = None):
         user = request.auth
         data = metrics_report(user, filter_model)
         return MetricsReport(success=True, data=data).dict()
