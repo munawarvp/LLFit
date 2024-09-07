@@ -48,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: CircleAvatar(
                       radius: 68,
                       child: CircleAvatar(
-                        backgroundColor: Colors.blueGrey,
+                        backgroundColor: Color.fromARGB(193, 157, 203, 226),
                         backgroundImage: NetworkImage(
                             "https://yoolk.ninja/wp-content/uploads/2022/04/OnePiece-Monkey-D-Luffy-1024x819.png'"),
                         radius: 100,

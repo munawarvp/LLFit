@@ -14,6 +14,7 @@ final Dio dio = Dio()..interceptors.add(
     InterceptorsWrapper(
       onError: (DioException error, handler) async {
         if(error.response?.statusCode == 401){
+          print('access token expired --- called for refresh');
           String token = await refreshAccessToken();
           final requestOptions = error.response!.requestOptions.copyWith(
             headers: {'Authorization': 'Bearer $token'}
@@ -28,6 +29,7 @@ final Dio dio = Dio()..interceptors.add(
             data: requestOptions.data,
             queryParameters: requestOptions.queryParameters
           );
+          print("${response.data} --- refresh response");
           return handler.resolve(response);
         }
       },
@@ -60,9 +62,11 @@ Future<void> checkToken(context) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? token = prefs.getString('token');
   if (token == null || token.isEmpty){
+    print('No access token exist');
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const LoginScreen()));
   }
   else{
+    print('access token exist');
     final decodedToken = decodeJwt(token);
     final Map<String, dynamic> profile = await getUserProfile(decodedToken['userId'], token, context);
     final Map<String, dynamic> metrics = await getUserMetrics(token);

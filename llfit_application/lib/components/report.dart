@@ -17,6 +17,27 @@ class _ReportState extends State<Report> {
   late ZoomPanBehavior _zoomPanBehavior;
   late TrackballBehavior _trackballBehavior;
 
+
+  final int year = DateTime.now().year;
+  final List<String> monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+    'All'
+  ];
+  late DateTime selectedItem;
+  final List<DateTime> months =
+      List<DateTime>.generate(12, (int index) => DateTime(2024, index + 1, 1));
+
   final List<SalesData> chartData = [
     SalesData(DateTime(2010), 52.4),
     SalesData(DateTime(2011), 52.4),
@@ -27,15 +48,16 @@ class _ReportState extends State<Report> {
 
   @override
   void initState() {
+    selectedItem = DateTime(2024);
     _zoomPanBehavior = ZoomPanBehavior(
       enablePinching: true,
       enablePanning: true,
       zoomMode: ZoomMode.xy,
     );
     _trackballBehavior = TrackballBehavior(
-      enable: true,
-      markerSettings: TrackballMarkerSettings(markerVisibility: TrackballVisibilityMode.visible)
-    );
+        enable: true,
+        markerSettings: TrackballMarkerSettings(
+            markerVisibility: TrackballVisibilityMode.visible));
     super.initState();
   }
 
@@ -56,9 +78,9 @@ class _ReportState extends State<Report> {
                 color: primaryColor,
                 child: SizedBox(
                   width: 180,
-                  height: 180,
+                  height: 160,
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Column(
                       children: [
                         const Text('Weight:',
@@ -94,9 +116,9 @@ class _ReportState extends State<Report> {
                 color: cardOne,
                 child: SizedBox(
                   width: 180,
-                  height: 180,
+                  height: 160,
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Column(
                       children: [
                         const Text('BMI:',
@@ -162,6 +184,38 @@ class _ReportState extends State<Report> {
             ),
           ),
           Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            child: Text('Montly Report'),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30.0),
+            child: Row(
+              children: [
+                SizedBox(
+                  // width: MediaQuery.of(context).size.width * 0.5,
+                  child: DropdownButton<DateTime>(
+                    value: selectedItem,
+                    menuMaxHeight: 150,
+                    items: months.map<DropdownMenuItem<DateTime>>((DateTime value) {
+                      return DropdownMenuItem<DateTime>(
+                        value: value,
+                        child: Text('${monthNames[value.month - 1]} ${value.year}'),
+                      );
+                    }).toList(),
+                    onChanged: (DateTime? newValue) {
+                      // Handle the change here
+                      print("${newValue} --- new selected value");
+                      setState(() {
+                        selectedItem = newValue!;
+                      });
+                    },
+                  ),
+                ),
+                SizedBox(width: 100)
+              ],
+            ),
+          ),
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Container(
                 height: 300,
@@ -175,7 +229,7 @@ class _ReportState extends State<Report> {
                           dataSource: chartData,
                           color: Colors.red,
                           width: 4,
-                          markerSettings: MarkerSettings(isVisible: true),
+                          markerSettings: const MarkerSettings(isVisible: true),
                           xValueMapper: (SalesData sales, _) => sales.date,
                           yValueMapper: (SalesData sales, _) => sales.weight),
                     ])),
