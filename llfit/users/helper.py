@@ -89,9 +89,20 @@ def schedule_job():
         scheduler.add_job(
             health_checking,
             "interval",
-            seconds=45
+            seconds=90
         )
         scheduler.start()
         return {'success': True, 'message': 'Job scheduled'}
     else:
         return {'success': False, 'message': 'Job already running'}
+
+
+def metrics_report(user, filter_model):
+    filters = {'user': user.id}
+    if filter_model:
+        filters.update({
+            'created_at__month': filter_model.month,
+            'created_at__year': filter_model.year        
+        })
+    metrics = UserMetrics.objects.filter(**filters).values('weight', 'created_at')
+    return metrics
