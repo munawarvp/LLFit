@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:llfit_application/services/user.dart';
 import 'package:llfit_application/utils/config.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -7,7 +6,8 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 class Report extends StatefulWidget {
   final Map<String, dynamic> metrics;
-  Report({super.key, required this.metrics});
+  final List metricsChart;
+  const Report({super.key, required this.metrics, required this.metricsChart});
 
   @override
   State<Report> createState() => _ReportState();

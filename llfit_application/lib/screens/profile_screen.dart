@@ -3,6 +3,7 @@ import 'package:llfit_application/components/bottom_bar.dart';
 import 'package:llfit_application/components/bottom_sheet.dart';
 import 'package:llfit_application/components/info.dart';
 import 'package:llfit_application/components/report.dart';
+import 'package:llfit_application/models/shonawar.dart';
 import 'package:llfit_application/services/user.dart';
 import 'package:llfit_application/utils/config.dart';
 
@@ -10,12 +11,14 @@ class ProfileScreen extends StatefulWidget {
   final String token;
   final Map<String, dynamic> profile;
   final Map<String, dynamic> metrics;
+  final List<Datum> metricsChart;
 
   const ProfileScreen(
       {super.key,
       required this.token,
       required this.profile,
-      required this.metrics});
+      required this.metrics,
+      required this.metricsChart});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -112,7 +115,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                     ),
                   ),
-                  _selectedIndex == 0 ? Report(metrics: widget.metrics) : InfoPage(profile: widget.profile),
+                  _selectedIndex == 0 ? Report(metrics: widget.metrics, metricsChart: widget.metricsChart) : InfoPage(profile: widget.profile),
                 ],
               ),
             ),

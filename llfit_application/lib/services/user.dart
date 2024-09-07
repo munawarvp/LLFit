@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:llfit_application/models/shonawar.dart';
 import 'package:llfit_application/screens/home_screen.dart';
 import 'package:llfit_application/screens/login_screen.dart';
 import 'package:llfit_application/screens/profile_screen.dart';
@@ -44,10 +45,11 @@ void loginUser(context, data) async {
     final decodedToken = decodeJwt(response.data['access']);
     final metrics = await getUserMetrics(response.data['access']);
     final profile = await getUserProfile(decodedToken['userId'], response.data['access'], context);
+    final metricsChart = await fetchUserMetrics(null);
     await prefs.setString('token', response.data['access']);
     await prefs.setString('refresh', response.data['refresh']);
 
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>ProfileScreen(token: response.data['access'], profile: profile, metrics: metrics)));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>ProfileScreen(token: response.data['access'], profile: profile, metrics: metrics, metricsChart: metricsChart)));
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Login failed..!', style: TextStyle(color: Colors.black45)),
@@ -70,7 +72,7 @@ Future<void> checkToken(context) async {
     final decodedToken = decodeJwt(token);
     final Map<String, dynamic> profile = await getUserProfile(decodedToken['userId'], token, context);
     final Map<String, dynamic> metrics = await getUserMetrics(token);
-    Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>ProfileScreen(token: token, profile: profile, metrics: metrics)));
+    Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>ProfileScreen(token: token, profile: profile, metrics: metrics, metricsChart: [])));
   }
 }
 
@@ -173,5 +175,15 @@ Future calculateMetrics(int metricsId) async {
     dio.options.headers["Authorization"] = "Bearer $token";
     final response = await dio.get('$baseUrl/api/user/calculate-bmi', queryParameters: {'metrics_id': metricsId});
     return response.data;
+  } catch (e) {}
+}
+
+Future fetchUserMetrics(DateTime? filterModel) async {
+  try {
+    final token = getToken();
+    dio.options.headers["Authorization"] = "Bearer $token";
+    final response = await dio.get('$baseUrl/api/user/metrics-report');
+    final shonawar = Shonawars.fromJson(response.data).data;
+    return shonawar;
   } catch (e) {}
 }
