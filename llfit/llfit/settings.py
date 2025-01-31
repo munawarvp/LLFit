@@ -47,9 +47,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users',
     'ninja_jwt',
     'ninja_extra',
+
+    'users',
+    'workout',
 ]
 
 MIDDLEWARE = [
