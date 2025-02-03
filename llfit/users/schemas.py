@@ -4,6 +4,7 @@ from typing import Optional
 from ninja import ModelSchema, Schema
 
 from users.models import UserMetrics, UserProfile
+from workout.models import UserWorkout
 
 
 class UserCreate(Schema):
@@ -60,3 +61,9 @@ class UserProfileOut(ModelSchema):
     class Meta:
         model = UserProfile
         fields = ('id', 'age', 'gender', 'shift', 'level', 'address', 'phone_number')
+
+# class UserWorkoutOut(ModelSchema):
+    
+#     class Meta:
+#         model = UserWorkout
+#         fields = ('id', 'day', 'is_completed')

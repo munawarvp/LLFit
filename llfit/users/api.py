@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List
 
 from ninja_extra import NinjaExtraAPI
 
@@ -6,6 +7,7 @@ from django.contrib.auth.models import User
 from ninja_extra import route, api_controller
 from ninja_jwt.controller import NinjaJWTDefaultController
 
+from workout.models import UserWorkout
 from users.dependencies.auth import AuthBearer
 from users.models import UserMetrics, UserProfile
 from users.schemas import (
@@ -20,7 +22,9 @@ from users.schemas import (
                             UserProfileOut,
                             MetricsReport
                         )
+from workout.schemas import UserWorkoutOut
 from users.helper import send_activation_mail, create_user_metrics_record, activate_user_token, create_user_profile_record, calculate_latest_bmi, schedule_job, metrics_report
+from workout.api import WorkoutController
 
 api = NinjaExtraAPI(auth=AuthBearer())
 
@@ -228,6 +232,34 @@ class AuthController:
     def keep_server_alive_using_job(self, request):
         resposne = schedule_job()
         return resposne
+    
+
+    # master account apis
+    @route.get('/list', response=List[UserOut])
+    def get_users(self, request, keywork: str = "", limit: int = 10, offset: int = 0):
+        try:
+            user = request.auth
+            if not user.is_superuser:
+                return {"success": False, "message": "Permission denied"}
+            users = User.objects.filter(is_superuser=False, is_staff=False, username__icontains=keywork)[offset:offset + limit]
+            return users
+        except Exception as e:
+            return {"success": False, "message": f"Error --- {e}"}
+        
+    
+    @route.get('/workout/list', response=List[UserWorkoutOut])
+    def get_users_workout_list(self, request, limit: int = 10, offset: int = 0):
+        # try:
+        day = datetime.now().strftime("%A")
+        print(day, 'day')
+        user = request.auth
+        user_workout = UserWorkout.objects.filter(user=user.id, day=day.lower())[offset:offset + limit]
+        print(user_workout, 'user_workout')
+        return user_workout
+        # except Exception as e:
+        #     return {"success": False, "message": f"Error --- {e}"}
+    
 
 api.register_controllers(NinjaJWTDefaultController)
 api.register_controllers(AuthController)
+api.register_controllers(WorkoutController)
