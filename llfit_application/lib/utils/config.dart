@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-String baseUrl = 'https://llfit.onrender.com';
+String baseUrl = 'https://legacy-breaking-initiatives-stamps.trycloudflare.com';
 
 const Color baseColor = Color.fromARGB(255, 137, 12, 189);
 const Color primaryColor = Color.fromARGB(255, 158, 43, 207);
