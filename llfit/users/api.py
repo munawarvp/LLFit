@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import List
 
 from ninja_extra import NinjaExtraAPI
+from ninja.errors import HttpError
 
 from django.contrib.auth.models import User
 from ninja_extra import route, api_controller
@@ -103,6 +104,8 @@ class AuthController:
             else:
                 user_profile = UserProfile.objects.get(user=user.id)
             return user_profile
+        except UserProfile.DoesNotExist:
+            raise HttpError(404, "UserProfile not found")
         except Exception as e:
             return {"success": False, "message": f"Error --- {e}"}
 
