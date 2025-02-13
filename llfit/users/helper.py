@@ -55,10 +55,12 @@ def create_user_metrics_record(data_obj: UserMetricsCreate):
     return user_metrics
 
 
-def create_user_profile_record(data_obj: UserProfileCreate):
+def create_user_profile_record(data_obj: UserProfileCreate, user):
     try:
         data = data_obj.model_dump()
-        user = User.objects.get(id=data_obj.user)
+        if data_obj.user and user.is_superuser:
+            user = User.objects.get(id=data_obj.user)
+            
         data['user'] = user
         user_profile = UserProfile.objects.create(**data)
     except Exception as e:
