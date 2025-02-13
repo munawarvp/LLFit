@@ -39,11 +39,6 @@ class _ReportState extends State<Report> {
       List<DateTime>.generate(12, (int index) => DateTime(2024, index + 1, 1));
 
   final List<SalesData> chartData = [
-    SalesData(DateTime(2010), 52.4),
-    SalesData(DateTime(2011), 52.4),
-    SalesData(DateTime(2012), 52.4),
-    SalesData(DateTime(2013), 53.4),
-    SalesData(DateTime(2014), 53.6),
   ];
 
   @override
@@ -56,7 +51,7 @@ class _ReportState extends State<Report> {
     );
     _trackballBehavior = TrackballBehavior(
         enable: true,
-        markerSettings: TrackballMarkerSettings(
+        markerSettings: const TrackballMarkerSettings(
             markerVisibility: TrackballVisibilityMode.visible));
     super.initState();
   }
@@ -78,7 +73,7 @@ class _ReportState extends State<Report> {
                 color: primaryColor,
                 child: SizedBox(
                   width: 180,
-                  height: 160,
+                  height: 140,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -89,10 +84,10 @@ class _ReportState extends State<Report> {
                                 fontSize: 18,
                                 fontWeight: FontWeight.w900,
                                 fontFamily: 'Courier New')),
-                        Text('${widget.metrics['weight']}',
+                        Text('${widget.metrics['weight'] ?? 0}',
                             style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 45,
+                                fontSize: 28,
                                 fontWeight: FontWeight.w600)),
                         const Text('Height:',
                             style: TextStyle(
@@ -100,7 +95,7 @@ class _ReportState extends State<Report> {
                                 fontSize: 15,
                                 fontWeight: FontWeight.w900,
                                 fontFamily: 'Courier New')),
-                        Text('${widget.metrics['height']}',
+                        Text('${widget.metrics['height'] ?? 0}',
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -116,7 +111,7 @@ class _ReportState extends State<Report> {
                 color: cardOne,
                 child: SizedBox(
                   width: 180,
-                  height: 160,
+                  height: 140,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -124,18 +119,18 @@ class _ReportState extends State<Report> {
                         const Text('BMI:',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 20,
+                                fontSize: 18,
                                 fontWeight: FontWeight.w900,
                                 fontFamily: 'Courier New')),
                         widget.metrics['bmi'] != null
                             ? Text('${widget.metrics['bmi']}',
                                 style: const TextStyle(
                                     color: Colors.white,
-                                    fontSize: 45,
+                                    fontSize: 28,
                                     fontWeight: FontWeight.w600))
                             : IconButton(
                                 icon: const Icon(Icons.refresh,
-                                    color: Colors.white, size: 40),
+                                    color: Colors.white, size: 28),
                                 onPressed: () {
                                   calculateMetrics(widget.metrics['id']);
                                 },
@@ -149,7 +144,7 @@ class _ReportState extends State<Report> {
                         const Text('57',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 18,
+                                fontSize: 15,
                                 fontWeight: FontWeight.w900)),
                       ],
                     ),
@@ -164,10 +159,10 @@ class _ReportState extends State<Report> {
               width: double.infinity,
               child: LinearPercentIndicator(
                   width: 345,
-                  lineHeight: 25.0,
-                  percent: (widget.metrics['weight'] - 47) / (57 - 47),
+                  lineHeight: 23.0,
+                  percent: ((widget.metrics['weight'] ?? 47) - 47) / (57 - 47),
                   center: Text(
-                    "${widget.metrics['weight']} kgs",
+                    "${widget.metrics['weight'] ?? 0} kgs",
                     style: const TextStyle(
                         fontSize: 15.0,
                         fontWeight: FontWeight.bold,
@@ -183,12 +178,12 @@ class _ReportState extends State<Report> {
                   )),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30.0),
             child: Text('Montly Report'),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30.0),
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
             child: Row(
               children: [
                 SizedBox(

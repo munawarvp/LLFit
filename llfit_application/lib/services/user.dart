@@ -42,14 +42,14 @@ void loginUser(context, data) async {
   try {
     final response = await dio.post('$baseUrl/api/token/pair', data: data);
     final prefs = await SharedPreferences.getInstance();
-    final decodedToken = decodeJwt(response.data['access']);
-    final metrics = await getUserMetrics(response.data['access']);
-    final profile = await getUserProfile(decodedToken['userId'], response.data['access'], context);
-    final metricsChart = await fetchUserMetrics(null);
     await prefs.setString('token', response.data['access']);
     await prefs.setString('refresh', response.data['refresh']);
 
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>ProfileScreen(token: response.data['access'], profile: profile, metrics: metrics, metricsChart: metricsChart)));
+    final decodedToken = decodeJwt(response.data['access']);
+    final username = await getUsername(decodedToken['user_id']);
+    await prefs.setString('username', username);
+
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=> const HomeScreen()));
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Login failed..!', style: TextStyle(color: Colors.black45)),
@@ -69,10 +69,19 @@ Future<void> checkToken(context) async {
   }
   else{
     print('access token exist');
-    final decodedToken = decodeJwt(token);
-    final Map<String, dynamic> profile = await getUserProfile(decodedToken['userId'], token, context);
-    final Map<String, dynamic> metrics = await getUserMetrics(token);
-    Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>ProfileScreen(token: token, profile: profile, metrics: metrics, metricsChart: [])));
+    // final decodedToken = decodeJwt(token);
+    // final Map<String, dynamic> profile = await getUserProfile(decodedToken['userId'], token, context);
+    // final Map<String, dynamic> metrics = await getUserMetrics(token);
+    Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>const ProfileScreen()));
+  }
+}
+
+Future<String> getUsername(int userId) async {
+  try {
+    final response = await dio.get('$baseUrl/api/user/get-user?user_id=$userId');
+    return response.data['username'];
+  } catch (e) {
+    return 'username';
   }
 }
 
@@ -132,7 +141,7 @@ Future getToken() async {
   return token;
 }
 
-Future<dynamic> getUserProfile(userId, token, context) async {
+Future<dynamic> getUserProfile(token) async {
   try{
     dio.options.headers["Authorization"] = "Bearer $token";
     Response response = await dio.get('$baseUrl/api/user/get-profile');
@@ -140,7 +149,7 @@ Future<dynamic> getUserProfile(userId, token, context) async {
   } catch(e){}
 }
 
-Future<dynamic> getUserMetrics(String token, {int? userId}) async {
+Future<dynamic> getUserMetrics(String token) async {
   try{
     dio.options.headers["Authorization"] = "Bearer $token";
     Response response = await dio.get('$baseUrl/api/user/user-metrics');
@@ -185,5 +194,14 @@ Future fetchUserMetrics(DateTime? filterModel) async {
     final response = await dio.get('$baseUrl/api/user/metrics-report');
     final shonawar = Shonawars.fromJson(response.data).data;
     return shonawar;
+  } catch (e) {}
+}
+
+Future fetchUserWorkout() async {
+  try {
+    final token = getToken();
+    dio.options.headers["Authorization"] = "Bearer $token";
+    final response = await dio.get('$baseUrl/api/user/workout/list');
+    return response.data;
   } catch (e) {}
 }
