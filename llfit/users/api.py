@@ -90,22 +90,17 @@ class AuthController:
             return {"success": False, "message": f"Error --- {e}"}
         
 
-    @route.get('/get-profile', response=UserProfileOut)
-    def get_user_profile(self, request, profile_id:int=None):
+    @route.get('/get-profile')
+    def get_user_profile(self, request):
         '''
         Get UserProfile record
-        args:
-            profile_id: int
         '''
         try:
             user = request.auth
-            if profile_id:
-                user_profile = UserProfile.objects.get(id=profile_id)
-            else:
-                user_profile = UserProfile.objects.get(user=user.id)
-            return user_profile
-        except UserProfile.DoesNotExist:
-            raise HttpError(404, "UserProfile not found")
+            user_profile = UserProfile.objects.filter(user=user.id).first()
+            if user_profile:
+                return UserProfileOut.from_orm(user_profile)
+            return {'user': UserOut.from_orm(user)}
         except Exception as e:
             return {"success": False, "message": f"Error --- {e}"}
 
@@ -148,7 +143,8 @@ class AuthController:
                 request,
                 data: UserMetricsCreate
         '''
-        user_profile = create_user_profile_record(data)
+        user = request.auth
+        user_profile = create_user_profile_record(data, user)
         if user_profile:
             return {'success': True, 'message': 'User profile created successfully..!'}
         else:

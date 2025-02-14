@@ -50,7 +50,7 @@ class UserProfileSchema(Schema):
     phone_number: Optional[str] = None
 
 class UserProfileCreate(UserProfileSchema):
-    user: int
+    user: Optional[int] = None
 
 class MetricsReport(Schema):
     success: bool
