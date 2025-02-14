@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import List
 
 from ninja_extra import NinjaExtraAPI
+from ninja.errors import HttpError
 
 from django.contrib.auth.models import User
 from ninja_extra import route, api_controller
