@@ -4,7 +4,6 @@ import 'package:llfit_application/screens/profile_screen.dart';
 import 'package:llfit_application/services/user.dart';
 import 'package:llfit_application/utils/config.dart';
 
-
 class BottomBar extends StatelessWidget {
   const BottomBar({super.key});
 
@@ -22,24 +21,30 @@ class BottomBar extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.home, color: Colors.white),
               onPressed: () {
-                Navigator.of(context).pushNamed('/home-screen');
+                if (ModalRoute.of(context)?.settings.name != '/home-screen') {
+                  Navigator.of(context).pushNamed('/home-screen');
+                }
               },
             ),
             IconButton(
-              icon: const Icon(Icons.search, color: Colors.white),
+              icon: const Icon(Icons.currency_rupee, color: Colors.white),
               onPressed: () async {
                 await checkToken(context);
               },
             ),
             IconButton(
-              icon: const Icon(Icons.menu_book_rounded, color: Colors.white),
+              icon: const Icon(Icons.movie_filter, color: Colors.white),
               onPressed: () {
                 // Navigator.of(context).pushNamed('/signup-screen');
               },
             ),
             IconButton(
               icon: const Icon(Icons.person, color: Colors.white),
-              onPressed: ()=>checkToken(context),
+              onPressed: () {
+                if (ModalRoute.of(context)?.settings.name != '/profile-screen') {
+                  Navigator.of(context).pushNamed('/profile-screen');
+                }
+              },
             ),
           ],
         ),

@@ -12,6 +12,10 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   bool passwordVisible = true;
 
+   final _usernameController = TextEditingController();
+   final _emailController = TextEditingController();
+   final _passwordController = TextEditingController();
+
   void togglePasswordVisibility() {
     setState(() {
       passwordVisible = !passwordVisible; // Toggle the visibility
@@ -28,14 +32,14 @@ class _SignupScreenState extends State<SignupScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Get Started...',
+                const Text('Signup',
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 33,
-                        fontFamily: 'Courier New')),
+                        fontSize: 33,)),
                 const SizedBox(height: 20),
                 TextField(
+                  controller: _usernameController,
                   cursorColor: Colors.purple,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
@@ -51,6 +55,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 const SizedBox(height: 20),
                 TextField(
+                  controller: _emailController,
                   cursorColor: Colors.purple,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
@@ -66,6 +71,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 const SizedBox(height: 20),
                 TextField(
+                  controller: _passwordController,
                   obscureText: passwordVisible,
                   cursorColor: Colors.purple,
                   style: const TextStyle(color: Colors.white),
@@ -105,8 +111,28 @@ class _SignupScreenState extends State<SignupScreen> {
                           borderSide: const BorderSide(
                               width: 0, style: BorderStyle.none))),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 5.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("Already have an account?",
+                          style: TextStyle(color: Colors.white, fontSize: 16)),
+                      // const Text('Signup', style: TextStyle(color: Colors.white, fontSize: 18)),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pushNamed('/login-screen');
+                          },
+                          child: const Text('Login',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18)))
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 20),
-                AuthButton(buttonText: 'Sign Up', buttonAction: () {})
+                AuthButton(buttonText: 'Signup', buttonAction: () {
+                  registerUser(context, {});
+                })
               ],
             ),
           )),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:llfit_application/services/user.dart';
 import 'package:llfit_application/utils/config.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -7,7 +6,8 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 class Report extends StatefulWidget {
   final Map<String, dynamic> metrics;
-  Report({super.key, required this.metrics});
+  final List metricsChart;
+  const Report({super.key, required this.metrics, required this.metricsChart});
 
   @override
   State<Report> createState() => _ReportState();
@@ -17,25 +17,42 @@ class _ReportState extends State<Report> {
   late ZoomPanBehavior _zoomPanBehavior;
   late TrackballBehavior _trackballBehavior;
 
+
+  final int year = DateTime.now().year;
+  final List<String> monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+    'All'
+  ];
+  late DateTime selectedItem;
+  final List<DateTime> months =
+      List<DateTime>.generate(12, (int index) => DateTime(2024, index + 1, 1));
+
   final List<SalesData> chartData = [
-    SalesData(DateTime(2010), 52.4),
-    SalesData(DateTime(2011), 52.4),
-    SalesData(DateTime(2012), 52.4),
-    SalesData(DateTime(2013), 53.4),
-    SalesData(DateTime(2014), 53.6),
   ];
 
   @override
   void initState() {
+    selectedItem = DateTime(2024);
     _zoomPanBehavior = ZoomPanBehavior(
       enablePinching: true,
       enablePanning: true,
       zoomMode: ZoomMode.xy,
     );
     _trackballBehavior = TrackballBehavior(
-      enable: true,
-      markerSettings: TrackballMarkerSettings(markerVisibility: TrackballVisibilityMode.visible)
-    );
+        enable: true,
+        markerSettings: const TrackballMarkerSettings(
+            markerVisibility: TrackballVisibilityMode.visible));
     super.initState();
   }
 
@@ -56,9 +73,9 @@ class _ReportState extends State<Report> {
                 color: primaryColor,
                 child: SizedBox(
                   width: 180,
-                  height: 180,
+                  height: 140,
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Column(
                       children: [
                         const Text('Weight:',
@@ -67,10 +84,10 @@ class _ReportState extends State<Report> {
                                 fontSize: 18,
                                 fontWeight: FontWeight.w900,
                                 fontFamily: 'Courier New')),
-                        Text('${widget.metrics['weight']}',
+                        Text('${widget.metrics['weight'] ?? 0}',
                             style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 45,
+                                fontSize: 28,
                                 fontWeight: FontWeight.w600)),
                         const Text('Height:',
                             style: TextStyle(
@@ -78,7 +95,7 @@ class _ReportState extends State<Report> {
                                 fontSize: 15,
                                 fontWeight: FontWeight.w900,
                                 fontFamily: 'Courier New')),
-                        Text('${widget.metrics['height']}',
+                        Text('${widget.metrics['height'] ?? 0}',
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -94,26 +111,26 @@ class _ReportState extends State<Report> {
                 color: cardOne,
                 child: SizedBox(
                   width: 180,
-                  height: 180,
+                  height: 140,
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Column(
                       children: [
                         const Text('BMI:',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 20,
+                                fontSize: 18,
                                 fontWeight: FontWeight.w900,
                                 fontFamily: 'Courier New')),
                         widget.metrics['bmi'] != null
                             ? Text('${widget.metrics['bmi']}',
                                 style: const TextStyle(
                                     color: Colors.white,
-                                    fontSize: 45,
+                                    fontSize: 28,
                                     fontWeight: FontWeight.w600))
                             : IconButton(
                                 icon: const Icon(Icons.refresh,
-                                    color: Colors.white, size: 40),
+                                    color: Colors.white, size: 28),
                                 onPressed: () {
                                   calculateMetrics(widget.metrics['id']);
                                 },
@@ -127,7 +144,7 @@ class _ReportState extends State<Report> {
                         const Text('57',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 18,
+                                fontSize: 15,
                                 fontWeight: FontWeight.w900)),
                       ],
                     ),
@@ -142,10 +159,10 @@ class _ReportState extends State<Report> {
               width: double.infinity,
               child: LinearPercentIndicator(
                   width: 345,
-                  lineHeight: 25.0,
-                  percent: (widget.metrics['weight'] - 47) / (57 - 47),
+                  lineHeight: 23.0,
+                  percent: ((widget.metrics['weight'] ?? 47) - 47) / (57 - 47),
                   center: Text(
-                    "${widget.metrics['weight']} kgs",
+                    "${widget.metrics['weight'] ?? 0} kgs",
                     style: const TextStyle(
                         fontSize: 15.0,
                         fontWeight: FontWeight.bold,
@@ -159,6 +176,38 @@ class _ReportState extends State<Report> {
                     style:
                         TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
                   )),
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30.0),
+            child: Text('Montly Report'),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            child: Row(
+              children: [
+                SizedBox(
+                  // width: MediaQuery.of(context).size.width * 0.5,
+                  child: DropdownButton<DateTime>(
+                    value: selectedItem,
+                    menuMaxHeight: 150,
+                    items: months.map<DropdownMenuItem<DateTime>>((DateTime value) {
+                      return DropdownMenuItem<DateTime>(
+                        value: value,
+                        child: Text('${monthNames[value.month - 1]} ${value.year}'),
+                      );
+                    }).toList(),
+                    onChanged: (DateTime? newValue) {
+                      // Handle the change here
+                      print("${newValue} --- new selected value");
+                      setState(() {
+                        selectedItem = newValue!;
+                      });
+                    },
+                  ),
+                ),
+                SizedBox(width: 100)
+              ],
             ),
           ),
           Padding(
@@ -175,7 +224,7 @@ class _ReportState extends State<Report> {
                           dataSource: chartData,
                           color: Colors.red,
                           width: 4,
-                          markerSettings: MarkerSettings(isVisible: true),
+                          markerSettings: const MarkerSettings(isVisible: true),
                           xValueMapper: (SalesData sales, _) => sales.date,
                           yValueMapper: (SalesData sales, _) => sales.weight),
                     ])),

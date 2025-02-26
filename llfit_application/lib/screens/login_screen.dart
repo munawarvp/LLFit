@@ -40,12 +40,11 @@ class _LoginPageState extends State<LoginScreen> {
           children: [
             // Image.asset('assets/logo/LLFit.png', width: 100, height: 100),
             const SizedBox(height: 20),
-            const Text('Welcome back...',
+            const Text('Login',
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 33,
-                    fontFamily: 'Courier New')),
+                    fontSize: 35,)),
             const SizedBox(height: 20),
             TextField(
               controller: _usernameController,
@@ -87,6 +86,21 @@ class _LoginPageState extends State<LoginScreen> {
                       togglePasswordVisibility();
                     },
                   )),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Don't have an account?", style: TextStyle(color: Colors.white, fontSize: 16)),
+                  // const Text('Signup', style: TextStyle(color: Colors.white, fontSize: 18)),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/signup-screen');
+                      },
+                      child: const Text('Signup', style: TextStyle(color: Colors.white, fontSize: 18)))
+                ],
+              ),
             ),
             const SizedBox(height: 20),
             AuthButton(

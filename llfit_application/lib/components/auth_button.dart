@@ -20,7 +20,7 @@ class AuthButton extends StatelessWidget {
         onPressed: () {
           buttonAction();
         },
-        child: Text(buttonText, style: const TextStyle(color: baseColor, fontSize: 25, fontWeight: FontWeight.w900, fontFamily: 'Courier New'))
+        child: Text(buttonText, style: const TextStyle(color: baseColor, fontSize: 25, fontWeight: FontWeight.w700))
       )
     );
   }
