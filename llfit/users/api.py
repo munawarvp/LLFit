@@ -26,6 +26,7 @@ from users.schemas import (
 from workout.schemas import UserWorkoutOut
 from users.helper import send_activation_mail, create_user_metrics_record, activate_user_token, create_user_profile_record, calculate_latest_bmi, schedule_job, metrics_report
 from workout.api import WorkoutController
+from expense.api import ExpenseController
 
 api = NinjaExtraAPI(auth=AuthBearer())
 
@@ -262,3 +263,4 @@ class AuthController:
 api.register_controllers(NinjaJWTDefaultController)
 api.register_controllers(AuthController)
 api.register_controllers(WorkoutController)
+api.register_controllers(ExpenseController)
