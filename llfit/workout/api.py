@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from ninja_extra import route, api_controller
 from django.contrib.auth.models import User
 
